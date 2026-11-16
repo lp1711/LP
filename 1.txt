@@ -1,0 +1,115 @@
+1. Fibonacci (Fib.java)
+
+import java.util.*;
+
+public class Fib {
+    static long rec(int n) {
+        if (n <= 1) return n;
+        return rec(n - 1) + rec(n - 2);
+    }
+
+    static long iter(int n) {   // non recursive
+        long a = 0, b = 1;
+        for (int i = 0; i < n; i++) {
+            long t = a + b;
+            a = b;
+            b = t;
+        }
+        return a;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter n: ");
+        int n = sc.nextInt();
+
+        System.out.println("Recursive: " + rec(n));
+        System.out.println("Time complexity: O(2^n)");
+        
+        System.out.println("Non-recursive: " + iter(n));
+        System.out.println("Time complexity: O(n)");
+
+    }
+}
+
+// INPUT: one whole number n (which Fibonacci term you want).
+// Example: 10  ->  output 55
+// Keep n below about 40, because the recursive version gets very slow for big n.
+//0 1 1 2 3 5 8 13
+
+
+
+2. Huffman Encoding (Huffman.java)
+
+import java.util.*;
+
+public class Huffman {
+    static class Node {
+        char ch;
+        int freq;
+        Node left, right;
+
+        Node(char ch, int freq, Node left, Node right) {
+            this.ch = ch;
+            this.freq = freq;
+            this.left = left;
+            this.right = right;
+        }
+    }
+
+    static void print(Node n, String code) {
+        if (n.left == null) {
+            System.out.println(n.ch + " " + code);
+            return;
+        }
+        print(n.left, code + "0");
+        print(n.right, code + "1");
+    }
+
+    public static void main(String[] args) {
+        char[] c = {'a', 'b', 'c', 'd', 'e', 'f'};
+        int[] f = {5, 9, 12, 13, 16, 45};
+        PriorityQueue<Node> pq = new PriorityQueue<>((x, y) -> x.freq - y.freq);
+        for (int i = 0; i < c.length; i++) pq.add(new Node(c[i], f[i], null, null));
+        while (pq.size() > 1) {
+            Node a = pq.poll(), b = pq.poll();
+            pq.add(new Node('-', a.freq + b.freq, a, b));
+        }
+        print(pq.poll(), "");
+    }
+}
+
+// INPUT: nothing to type, the data is inside the code.
+// c[] = the characters, f[] = how often each character appears (same positions).
+// To use your own data, change the two arrays c and f (they must have the same length).
+// OUTPUT: each character with its binary Huffman code.
+
+
+
+3. Fractional Knapsack (FractionalKnapsack.java)
+
+import java.util.*;
+
+public class FractionalKnapsack {
+    public static void main(String[] args) {
+	Integer[] id = {0, 1, 2};  //every element seperate
+        int[] w = {10, 20, 30};    //entire array
+        int[] v = {60, 100, 120};
+        int cap = 50;
+
+        Arrays.sort(id, (a, b) -> Double.compare((double) v[b] / w[b], (double) v[a] / w[a]));  //for descending order
+        double total = 0;
+        for (int i : id) {
+            int take = Math.min(w[i], cap);
+            total += (double) v[i] * take / w[i];
+            cap -= take;
+        }
+        System.out.println("Maximum value: " + total);
+    }
+}
+
+// INPUT: nothing to type, the data is inside the code.
+// v[] = value of each item, w[] = weight of each item, cap = bag capacity.
+// To use your own data, change v, w and cap. If you add items, also add their
+// numbers to id[] (for 4 items: {0, 1, 2, 3}).
+// OUTPUT: maximum value (items can be taken in parts). Here: 240.0

@@ -1,0 +1,119 @@
+*PR1 Uber Fare*
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error
+
+df = pd.read_csv("uber.csv").dropna()
+X = df[["pickup_longitude", "pickup_latitude", "dropoff_longitude", "dropoff_latitude", "passenger_count"]]
+y = df["fare_amount"]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+model = LinearRegression().fit(X_train, y_train)
+print("MAE:", mean_absolute_error(y_test, model.predict(X_test)))
+
+plon = float(input("Pickup longitude: "))
+plat = float(input("Pickup latitude: "))
+dlon = float(input("Drop-off longitude: "))
+dlat = float(input("Drop-off latitude: "))
+p = int(input("Passengers: "))
+print("Predicted fare:", model.predict([[plon, plat, dlon, dlat, p]])[0])
+
+
+
+*PR2 Spam classification KNN and SVM*
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.feature_extraction.text import TfidfVectorizer 
+from sklearn.metrics import accuracy_score
+
+df = pd.read_csv("emails.csv")
+vec = TfidfVectorizer()
+X = vec.fit_transform(df["text"])
+y = df["label"]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+knn = KNeighborsClassifier(n_neighbors=3)
+knn.fit(X_train, y_train)
+print("KNN Accuracy:", accuracy_score(y_test, knn.predict(X_test)))
+
+svm = SVC()
+svm.fit(X_train, y_train)
+print("SVM Accuracy:", accuracy_score(y_test, svm.predict(X_test)))
+
+text = input("Enter new email: ")
+new_email = vec.transform([text]) #
+
+knn_result = knn.predict(new_email)
+svm_result = svm.predict(new_email)
+
+if knn_result == 1:
+    print("KNN: Spam")
+else:
+    print("KNN: Not Spam")
+
+if svm_result == 1:
+    print("SVM: Spam")
+else:
+    print("SVM: Not Spam")
+
+
+
+*PR3 Churn Bank Neural Network*
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score
+
+df = pd.read_csv("Churn_Modelling.csv")
+df = df.replace({"France": 0, "Spain": 1, "Germany": 2, "Female": 0, "Male": 1}) #
+X = df[["CreditScore", "Geography", "Gender", "Age", "Tenure", "Balance", "NumOfProducts", "HasCrCard", "IsActiveMember", "EstimatedSalary"]]
+# or X = df.drop(columns=["RowNumber", "CustomerId", "Surname", "Exited"])
+y = df["Exited"]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+sc = StandardScaler() #
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+
+model = MLPClassifier(hidden_layer_sizes=(16, 8), max_iter=500) #
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+print("Accuracy:", accuracy_score(y_test, y_pred)) 
+
+v = input("Enter 10 values: ").split(",")
+pred = model.predict(sc.transform([list(map(float, v))])) #
+
+if pred[0] == 1:
+    print("Will leave")
+else:
+    print("Will stay")
+
+/*
+credit = float(input("CreditScore: "))
+geo = float(input("Geography (0=France, 1=Spain, 2=Germany): "))
+gender = float(input("Gender (0=Female, 1=Male): "))
+age = float(input("Age: "))
+tenure = float(input("Tenure: "))
+balance = float(input("Balance: "))
+products = float(input("NumOfProducts: "))
+card = float(input("HasCrCard (1=yes, 0=no): "))
+active = float(input("IsActiveMember (1=yes, 0=no): "))
+salary = float(input("EstimatedSalary: "))
+
+pred = model.predict(sc.transform([[credit, geo, gender, age, tenure, balance, products, card, active, salary]]))
+
+if pred[0] == 1:
+    print("Will leave")
+else:
+    print("Will stay")
+*/
+
+/*output : CreditScore, Geography, Gender, Age, Tenure, Balance, NumOfProducts, HasCrCard, IsActiveMember, EstimatedSalary
+Example: 600,2,0,45,3,80000,1,1,0,50000
+give order based on the sequence of coloumns left in dataset
+*/
+

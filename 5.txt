@@ -1,0 +1,58 @@
+**PR1. MetaMask Installation**
+
+1. Open [https://metamask.com/download](https://metamask.com/download?utm_source=chatgpt.com)
+2. Select Web Browser → Add to Chrome.
+3. Import existing wallet and enter password : remember0416
+4. Save Secret Recovery Phrase:  abstract air normal type toy online cat sunny about mountain nature start
+5. Create 2 accounts.
+6. Select Sepolia / MegaETH test network (in tokens at middle left -> test networks should be visible).
+
+**PR2. Mining and Transaction**
+
+1. Copy Account 1 address.
+2. Mine using [https://sepolia-faucet.pk910.de/](https://sepolia-faucet.pk910.de/?utm_source=chatgpt.com) or [https://testnet.megaeth.com/](https://testnet.megaeth.com/?utm_source=chatgpt.com)
+3. Send ETH to Account 2 address.
+4. Confirm amount and gas fee.
+5. Check transaction in Activity tab.
+
+**PR3. Bank Smart Contract**
+1. Open Remix IDE (https://remix.ethereum.org).
+2. In the Files tab, click +, create Bank.sol and write your code.
+3. Open the Compile tab and select compiler version 0.8.20.
+4. Click Compile Bank.sol.
+5. Open Deploy & Run Transactions.
+6. Select Browser Extension as Environment and connect MetaMask.
+7. Click Deploy and confirm the transaction in MetaMask.
+8. Check Deployed Contracts.
+
+If the contract does not appear under Deployed Contracts:
+9. Open Sepolia Etherscan (https://sepolia.etherscan.io/).
+10. Copy the transaction ID (hash) from MetaMask and search it on Etherscan.
+11. Copy the Contract Created At address.
+12. Under Deployed Contracts, paste address
+
+To test the functions:
+14. Deposit: Set VALUE equal to the amount entered in the deposit input (both in Wei), then click Transact.
+15. Withdraw/Show Balance: Set VALUE to 0 Wei, lance.
+
+
+pragma solidity ^0.8.20;
+
+contract Bank {
+    mapping(address => uint) balance;
+
+    function deposit(uint amount) public payable {
+        require(msg.value == amount);
+        balance[msg.sender] += msg.value;
+    }
+
+    function withdraw(uint amount) public {
+        require(balance[msg.sender] >= amount);
+        balance[msg.sender] -= amount;
+        payable(msg.sender).transfer(amount);
+    }
+
+    function showBalance() public view returns (uint) {
+        return balance[msg.sender];
+    }
+}

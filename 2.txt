@@ -1,0 +1,124 @@
+4. 0/1 Knapsack (Knapsack01.java)
+
+public class Knapsack01 {
+    public static void main(String[] args) {
+        int[] v = {60, 100, 120};
+        int[] w = {10, 20, 30};
+        int cap = 50;
+        int[] dp = new int[cap + 1];
+        for (int i = 0; i < v.length; i++) {
+            for (int j = cap; j >= w[i]; j--) {
+                dp[j] = Math.max(dp[j], v[i] + dp[j - w[i]]);
+            }
+        }
+        System.out.println("Maximum value: " + dp[cap]);
+    }
+}
+
+// INPUT: nothing to type, the data is inside the code.
+// v[] = value of each item, w[] = weight of each item, cap = bag capacity.
+// To use your own data, change v, w and cap (v and w must have the same length).
+// OUTPUT: maximum value (each item taken fully or not at all). Here: 220
+
+5. N-Queens with first queen placed (NQueens.java)
+
+import java.util.*;
+
+public class NQueens {
+    static int n;
+    static int[] b;
+
+    static boolean safe(int r, int c) {
+        for (int i = 0; i < r; i++) {
+            if (b[i] == c || Math.abs(b[i] - c) == r - i) return false;
+        }
+        return true;
+    }
+
+    static boolean place(int r) {
+        if (r == n) return true;
+        for (int c = 0; c < n; c++) {
+            if (safe(r, c)) {
+                b[r] = c;
+                if (place(r + 1)) return true;
+            }
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter n: ");
+        n = sc.nextInt();
+        System.out.print("Column of first queen (0 to n-1): ");
+        b = new int[n];
+        b[0] = sc.nextInt();
+        if (!place(1)) {
+            System.out.println("No solution");
+            return;
+        }
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) System.out.print(b[i] == j ? "Q " : ". ");
+            System.out.println();
+        }
+    }
+}
+
+// INPUT 1: n = size of the board, a whole number (example: 8)
+// INPUT 2: column of the first queen in the top row, from 0 to n-1 (example: 3)
+// Columns are counted from 0, so 0 is the leftmost column.
+// OUTPUT: the n x n board, Q = queen, . = empty.
+// For some starting columns (and small n like 2 or 3) there is no solution.
+
+6. Mini Project: Substring Comparison (Substring.java)
+
+import java.util.*;
+
+public class Substring {
+    static List<Integer> naive(String t, String p) {
+        List<Integer> r = new ArrayList<>();
+        for (int i = 0; i + p.length() <= t.length(); i++) {
+            if (t.startsWith(p, i)) r.add(i);
+        }
+        return r;
+    }
+
+    static List<Integer> kmp(String t, String p) {
+        int[] lps = new int[p.length()];
+        for (int i = 1, j = 0; i < p.length(); i++) {
+            while (j > 0 && p.charAt(i) != p.charAt(j)) j = lps[j - 1];
+            if (p.charAt(i) == p.charAt(j)) j++;
+            lps[i] = j;
+        }
+        List<Integer> r = new ArrayList<>();
+        for (int i = 0, j = 0; i < t.length(); i++) {
+            while (j > 0 && t.charAt(i) != p.charAt(j)) j = lps[j - 1];
+            if (t.charAt(i) == p.charAt(j)) j++;
+            if (j == p.length()) {
+                r.add(i - j + 1);
+                j = lps[j - 1];
+            }
+        }
+        return r;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Text: ");
+        String t = sc.nextLine();
+        System.out.print("Pattern: ");
+        String p = sc.nextLine();
+
+        long s = System.nanoTime();
+        System.out.println("Naive: " + naive(t, p) + " " + (System.nanoTime() - s) + " ns");
+        s = System.nanoTime();
+        System.out.println("KMP: " + kmp(t, p) + " " + (System.nanoTime() - s) + " ns");
+    }
+}
+
+// INPUT 1: Text = the long string to search in (example: abababcabab)
+// INPUT 2: Pattern = the word to find inside the text (example: ab)
+// The pattern must not be empty and must be shorter than the text.
+// OUTPUT: the positions (starting from 0) where the pattern is found, and the time taken
+// by the Naive method and the KMP method in nanoseconds, so you can compare them.
+// For a long text, KMP is usually faster.

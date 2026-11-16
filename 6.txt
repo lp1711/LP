@@ -1,0 +1,101 @@
+**PR4. Survey Report**
+Survey Report: Types of Blockchain and Real-World Use Cases
+Introduction
+A blockchain is a distributed digital ledger that stores records in blocks linked together using cryptographic hashes. Each block contains transaction data, a timestamp, and the hash of the previous block, which makes the data tamper-resistant. Because the ledger is shared across many nodes, no single party controls it. Consensus mechanisms such as Proof of Work and Proof of Stake let nodes agree on the valid state of the ledger.
+Types of Blockchain
+Public Blockchain: Open to anyone. Anyone can join, read, write, and validate transactions. It is fully decentralized and transparent but slower and more energy intensive. Examples: Bitcoin, Ethereum.
+Private Blockchain: Controlled by a single organization. Only approved participants can join. It is faster and more private but less decentralized. Examples: Hyperledger Fabric deployments, R3 Corda for internal use.
+Consortium Blockchain: Governed by a group of organizations instead of one. Several pre-selected nodes validate transactions. It balances trust and efficiency. Examples: Hyperledger Fabric networks, Quorum, the IBM Food Trust network.
+Hybrid Blockchain: Combines public and private features. Some data stays private while selected data is publicly verifiable. Examples: Dragonchain, XinFin.
+Comparison: Public chains offer the highest decentralization and transparency with low speed. Private chains offer high speed and privacy with low decentralization. Consortium chains offer medium decentralization with good speed. Hybrid chains are configurable according to need.
+Real-World Use Cases
+Finance and Payments: Cryptocurrencies enable fast cross-border transfers with lower fees. Banks use blockchain for trade finance and settlement. Decentralized finance (DeFi) offers lending, borrowing, and trading without intermediaries.
+Supply Chain: Companies track goods from origin to customer. Walmart uses blockchain to trace food items quickly, and Maersk with IBM built TradeLens for shipping documents.
+Healthcare: Patient records can be stored and shared securely with patient consent. Blockchain also helps verify the authenticity of medicines and prevent counterfeits.
+Digital Identity: Users control their own identity credentials and share only what is needed, reducing fraud and repeated verification.
+Education: Universities issue tamper-proof degree certificates that employers can verify instantly.
+Government and Land Records: Property records stored on blockchain reduce fraud and disputes. Countries such as Georgia and Sweden have piloted land registries, and Indian states have tried blockchain for document verification.
+Voting: Blockchain-based voting can improve transparency and auditability, though it is still experimental.
+Energy: Peer-to-peer energy trading lets households sell surplus solar power directly to neighbors.
+NFTs and Gaming: Non-fungible tokens prove ownership of digital art, collectibles, and in-game assets.
+Insurance: Smart contracts automatically pay claims when conditions are met, such as flight delay payouts.
+Challenges
+Scalability and low transaction speed on public chains, high energy use in Proof of Work, regulatory uncertainty, difficulty integrating with existing systems, and the immutability of mistakes or bugs in smart contracts.
+Conclusion
+Each blockchain type suits different needs. Public chains fit open and trustless applications, private and consortium chains fit enterprises needing privacy and speed, and hybrid chains offer flexibility. As scalability and regulation improve, blockchain is expected to see wider adoption across finance, healthcare, logistics, and governance.
+
+**PR5. Student Smart Contract**
+1. Open Remix IDE (https://remix.ethereum.org).
+2. In the Files tab, click +, create Student.sol and write your code.
+3. Open the Compile tab and select compiler version 0.8.20.
+4. Click Compile Student.sol.
+5. Open Deploy & Run Transactions.
+6. Select Browser Extension as Environment and connect MetaMask.
+7. Click Deploy and confirm the transaction in MetaMask.
+8. Check Deployed Contracts.
+
+If the contract does not appear under Deployed Contracts:
+9. Open Sepolia Etherscan (https://sepolia.etherscan.io/).
+10. Copy the transaction ID (hash) from MetaMask and search it on Etherscan.
+11. Copy the Contract Created At address.
+12. Under Deployed Contracts, paste address
+
+To test the functions:
+add : Ex: 1, "John", 19, 85
+get/students : to access id 1 put 0 (its index starts from 0, so 1 less than id)
+
+pragma solidity ^0.8.20;
+
+contract Student {
+    struct Data {
+        uint id;
+        string name;
+        uint age;
+        uint percentage;
+    }
+
+    Data[] public students;
+
+    function add(uint id, string memory name, uint age, uint percentage) public {
+        students.push(Data(id, name, age, percentage));
+    }
+
+    function get(uint i) public view returns(uint, string memory, uint, uint) {
+        require(i < students.length);
+        Data memory s = students[i];
+        return (s.id, s.name, s.age, s.percentage);
+    }
+
+    fallback() external payable {}
+    receive() external payable {}
+}
+
+*PR6: Mini Project - Voting System *
+pragma solidity ^0.8.20;
+
+contract Voting {
+    address owner = msg.sender;
+    string[] names;
+    uint[] votes;
+    mapping(address => bool) voted;
+
+    function addCandidate(string memory n) public {
+        require(msg.sender == owner);
+        names.push(n);
+        votes.push(0);
+    }
+
+    function vote(uint i) public {
+        require(!voted[msg.sender]);
+        voted[msg.sender] = true;
+        votes[i]++;
+    }
+
+    function winner() public view returns (string memory) {
+        uint w;
+        for (uint i = 1; i < names.length; i++) {
+            if (votes[i] > votes[w]) w = i;
+        }
+        return names[w];
+    }
+}

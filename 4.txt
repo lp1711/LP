@@ -1,0 +1,103 @@
+*PR4 Diabetes*
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import *
+
+df = pd.read_csv("diabetes.csv")
+X, y = df.drop(columns=["Outcome"]), df["Outcome"]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+model = KNeighborsClassifier(n_neighbors=5)
+model.fit(X_train, y_train)
+pred = model.predict(X_test)
+acc = accuracy_score(y_test, pred)
+print("Confusion matrix:\n", confusion_matrix(y_test, pred))
+print("Accuracy:", acc)
+print("Error rate:", 1 - acc)
+print("Precision:", precision_score(y_test, pred))
+print("Recall:", recall_score(y_test, pred))
+
+
+
+*PR5 Kmeans/Agglomerative sample_Data*
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans, AgglomerativeClustering
+from scipy.cluster.hierarchy import dendrogram, linkage
+
+
+df = pd.read_csv("sales_data_sample.csv", encoding="latin1")
+df = df.select_dtypes("number").dropna()
+X = StandardScaler().fit_transform(df)
+
+model1 = KMeans(n_clusters=3, n_init=10, random_state=42)
+model1.fit(X)
+print("K-Means:", model1.labels_)
+
+model2 = AgglomerativeClustering(n_clusters=3)
+model2.fit(X)
+print("Hierarchical:", model2.labels_)
+
+dendrogram(linkage(X, method="ward"))
+plt.show()
+
+
+*PR6: Titanic Survival Prediction*
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+
+df = pd.read_csv("titanic.csv")
+df["Age"] = df["Age"].fillna(df["Age"].mean())
+df["Sex"] = df["Sex"].map({"male": 0, "female": 1})
+X = df[["Pclass", "Sex", "Age", "SibSp", "Parch", "Fare"]]
+y = df["Survived"]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+model = LogisticRegression()
+model.fit(X_train, y_train)
+print("Accuracy:", model.score(X_test, y_test))
+
+v = input("Enter Pclass, Sex, Age, SibSp, Parch, Fare: ").split(",")
+pred = model.predict([list(map(float, v))])
+
+if pred[0] == 1:
+    print("Survived")
+else:
+    print("Did not survive")
+#input: 1,1,25,0,0,80
+
+OR SAME AS PR 4
+/*
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neural_network import MLPClassifier
+from sklearn.metrics import accuracy_score
+
+df = pd.read_csv("titanic.csv")
+df["Age"] = df["Age"].fillna(df["Age"].mean())
+df = df.replace({"male": 0, "female": 1})
+X = df[["Pclass", "Sex", "Age", "SibSp", "Parch", "Fare"]]
+y = df["Survived"]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test = sc.transform(X_test)
+
+model = MLPClassifier(hidden_layer_sizes=(16, 8), max_iter=500)
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+print("Accuracy:", accuracy_score(y_test, y_pred))
+
+v = input("Enter Pclass, Sex, Age, SibSp, Parch, Fare: ").split(",")
+pred = model.predict(sc.transform([list(map(float, v))]))
+
+if pred[0] == 1:
+    print("Survived")
+else:
+    print("Did not survive")
+*/
