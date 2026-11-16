@@ -3,12 +3,39 @@ Survey Report: Types of Blockchain and Real-World Use Cases
 Introduction
 A blockchain is a distributed digital ledger that stores records in blocks linked together using cryptographic hashes. Each block contains transaction data, a timestamp, and the hash of the previous block, which makes the data tamper-resistant. Because the ledger is shared across many nodes, no single party controls it. Consensus mechanisms such as Proof of Work and Proof of Stake let nodes agree on the valid state of the ledger.
 Types of Blockchain
-Public Blockchain: Open to anyone. Anyone can join, read, write, and validate transactions. It is fully decentralized and transparent but slower and more energy intensive. Examples: Bitcoin, Ethereum.
-Private Blockchain: Controlled by a single organization. Only approved participants can join. It is faster and more private but less decentralized. Examples: Hyperledger Fabric deployments, R3 Corda for internal use.
-Consortium Blockchain: Governed by a group of organizations instead of one. Several pre-selected nodes validate transactions. It balances trust and efficiency. Examples: Hyperledger Fabric networks, Quorum, the IBM Food Trust network.
-Hybrid Blockchain: Combines public and private features. Some data stays private while selected data is publicly verifiable. Examples: Dragonchain, XinFin.
-Comparison: Public chains offer the highest decentralization and transparency with low speed. Private chains offer high speed and privacy with low decentralization. Consortium chains offer medium decentralization with good speed. Hybrid chains are configurable according to need.
-Real-World Use Cases
+Types of Blockchain
+
+Public Blockchain
+
+Open to anyone to join, read, write, and validate transactions
+Uses Proof of Work or Proof of Stake for consensus
+Fully decentralized, transparent, and censorship resistant
+Slower, higher fees, and limited privacy
+Examples: Bitcoin, Ethereum, Solana
+
+Private Blockchain
+
+Controlled by a single organization that decides who can participate
+Uses lightweight consensus such as PBFT or Raft
+Fast, low cost, and highly private
+Weaker decentralization, so users must trust the owner
+Examples: Hyperledger Fabric (single-company use), R3 Corda (internal use)
+
+Consortium Blockchain
+
+Governed by a group of organizations with pre-selected validator nodes
+Shares control and costs among members
+Balances trust, speed, and privacy
+Governance setup can be slow, and members could collude
+Examples: Quorum, IBM Food Trust, TradeLens
+
+Hybrid Blockchain
+
+Combines public and private features
+Sensitive data stays private, while selected data or proofs are publicly verifiable
+Flexible and scalable
+More complex to design and maintain
+Examples: Dragonchain, XinFinReal-World Use Cases
 Finance and Payments: Cryptocurrencies enable fast cross-border transfers with lower fees. Banks use blockchain for trade finance and settlement. Decentralized finance (DeFi) offers lending, borrowing, and trading without intermediaries.
 Supply Chain: Companies track goods from origin to customer. Walmart uses blockchain to trace food items quickly, and Maersk with IBM built TradeLens for shipping documents.
 Healthcare: Patient records can be stored and shared securely with patient consent. Blockchain also helps verify the authenticity of medicines and prevent counterfeits.
